@@ -1,0 +1,22 @@
+image:
+  repository: ghcr.io/corvuscoraxhd/go-outyet
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: kubes.cc
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - kubes.cc
+      secretName: cloudflare-api-token-secret
