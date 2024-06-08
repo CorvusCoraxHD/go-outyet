@@ -53,8 +53,7 @@ jobs:
       
       - name: Create Cloudflare API Token Secret and run Issuer 
         run: |
-          kubectl create secret generic cloudflare-api-token-secret \
-              --from-literal=api-token=${{ secrets.CF_API_TOKEN }} \
+          kubectl apply -f cert-manager/cert-manager-secret.yaml
           kubectl apply -f cert-manager/cert-manager-issuer.yaml
           
       - name: Install Ingress/Nginx
