@@ -50,7 +50,12 @@ jobs:
       - name: Install cert-manager
         run: |
           kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
-          kubectl apply -f cert-manager/cert-manager-config.yaml
+      
+      - name: Create Cloudflare API Token Secret and run Issuer 
+        run: |
+          kubectl create secret generic cloudflare-api-token-secret \
+            --from-literal=api-token=${{ secrets.CF_API_TOKEN }} \
+          kubectl apply -f cert-manager/cert-manager-issuer.yaml
           
       - name: Install Ingress/Nginx
         run: |
