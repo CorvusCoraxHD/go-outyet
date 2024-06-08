@@ -1,0 +1,68 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u corvuscoraxhd --password-stdin
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t ghcr.io/corvuscoraxhd/go-outyet:latest .
+          docker push ghcr.io/corvuscoraxhd/go-outyet:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GKE_CREDENTIALS }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: 'latest'
+          project_id: go-outyet
+
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+
+      - name: Configure gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+          gcloud container clusters get-credentials go-outyet-cluster --zone us-west1-a --project hypnotic-guard-425421-m8
+
+      - name: Install cert-manager
+        run: |
+          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
+          kubectl apply -f cert-manager/cert-manager-config.yaml
+          
+      - name: Install Ingress/Nginx
+        run: |
+          kubectl create clusterrolebinding cluster-admin-binding \
+              --clusterrole cluster-admin \
+              --user $(gcloud config get-value account)
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
+          
+
+      - name: Apply Kubernetes Manifests
+        run: |
+          gcloud compute addresses create my-static-ip --global
+          kubectl apply -f helm/templates/deployment.yaml
+          kubectl apply -f helm/templates/service.yaml
+          
