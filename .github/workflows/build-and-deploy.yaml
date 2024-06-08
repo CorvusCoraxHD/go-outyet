@@ -38,6 +38,10 @@ jobs:
           version: 'latest'
           project_id: go-outyet
 
+      - name: Create a cluster
+        run: |
+          gcloud container clusters create go-outyet-cluster --zone us-west1-a
+      
       - name: Install gke-gcloud-auth-plugin
         run: |
           gcloud components install gke-gcloud-auth-plugin
