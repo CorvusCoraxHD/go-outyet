@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   name: go-outyet
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
     kubernetes.io/ingress.class: nginx
 spec:
   ingressClassName: nginx
