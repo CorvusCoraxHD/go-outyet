@@ -1,10 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: example-issuer
+  name: cluster-issuer
 spec:
   acme:
-    ...
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: ${{ secrets.EMAIL_ADDRESS }}
+    privateKeySecretRef:
+      name: cluster-issuer-account-key
     solvers:
     - dns01:
         cloudflare:
