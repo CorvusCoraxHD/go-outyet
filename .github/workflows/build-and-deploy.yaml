@@ -59,7 +59,7 @@ jobs:
       - name: Install Ingress/Nginx
         run: |
           kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
-          kubectl apply - helm/templates/ingress.yaml
+          kubectl apply -f helm/templates/ingress.yaml
 
       - name: Apply Kubernetes Manifests
         run: |
