@@ -17,8 +17,8 @@ FROM alpine:latest as deploy
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /
-COPY --from=builder /go/src/outyet/outyet .
-# (or) COPY --from=0 /go/src/outyet/outyet .
+COPY --from=builder /go/src/go-outyet/outyet .
+# (or) COPY --from=0 /go/src/go-outyet/outyet .
 
 EXPOSE 8080
 
