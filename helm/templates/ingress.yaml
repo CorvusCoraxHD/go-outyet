@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: go-outyet
+  name: outyet
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
@@ -18,6 +18,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: go-outyet-service
+            name: outyet
             port:
-              number: 80
+              number: 8080
