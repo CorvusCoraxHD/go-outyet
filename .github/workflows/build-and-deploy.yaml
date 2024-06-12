@@ -36,7 +36,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           version: 'latest'
-          project_id: go-outyet
+          project_id: outyet
       
       - name: Install gke-gcloud-auth-plugin
         run: |
