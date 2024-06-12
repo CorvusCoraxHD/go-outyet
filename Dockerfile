@@ -1,14 +1,25 @@
-FROM golang:1.19 AS builder
+FROM golang:1.22 AS builder
 
-WORKDIR /app
+COPY . /go/src/go-outyet
+WORKDIR /go/src/go-outyet
 
-COPY go.mod ./
-RUN go mod download
+ENV CGO_ENABLED=0
+ENV GOOS=linux
 
-COPY *.go ./
+RUN go get -v -d && \
+    go install -v && \
+    go test -v && \
+    go build -ldflags "-s" -a -installsuffix cgo -o go-outyet .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /go-outyet
+FROM alpine:latest as deploy
+# Deploy Image
+
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /
+COPY --from=builder /go/src/outyet/outyet .
+# (or) COPY --from=0 /go/src/outyet/outyet .
 
 EXPOSE 8080
 
-CMD ["/go-outyet"]
+CMD ["/go-outyet", "-version", "1.22.0", "-poll", "600s", "-http", ":8080"]
