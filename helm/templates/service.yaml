@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: outyet
+  name: go-outyet
 spec:
   selector:
-    app: outyet
+    app: go-outyet
   ports:
     - protocol: TCP
       port: 8080
