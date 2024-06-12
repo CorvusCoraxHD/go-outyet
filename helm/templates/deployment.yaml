@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-outyet-deployment
+  name: outyet
   labels:
-    app: go-outyet
+    app: outyet
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: go-outyet
+      app: outyet
   template:
     metadata:
       labels:
-        app: go-outyet
+        app: outyet
     spec:
       containers:
-      - name: go-outyet-container
+      - name: outyet
         image: ghcr.io/corvuscoraxhd/go-outyet:latest
         ports:
         - containerPort: 8080
