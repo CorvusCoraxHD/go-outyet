@@ -1,0 +1,11 @@
+version: "2"
+services:
+  outyet:
+    build:
+      context: .
+    image: outyet:latest
+    ports:
+      - "8080:8080"
+networks:
+  my-net:
+    driver: bridge
